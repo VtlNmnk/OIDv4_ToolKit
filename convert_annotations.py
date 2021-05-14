@@ -2,8 +2,7 @@ import os
 import cv2
 import numpy as np
 from tqdm import tqdm
-import argparse
-import fileinput
+import shutil
 
 
 # function that turns XMin, YMin, XMax, YMax coordinates to normalized yolo format
@@ -72,12 +71,18 @@ for DIR in DIRS:
                                 annotations.append(line)
                             f.close()
                         os.chdir("..")
+                        os.chdir("..")
                         with open(filename, "w") as outfile:
                             for line in annotations:
                                 outfile.write(line)
                                 outfile.write("\n")
                             outfile.close()
+                        image_src_path = os.path.join(ROOT_DIR, "OID", "Dataset", DIR, CLASS_DIR, filename.replace(".txt", ".jpg"))
+                        image_dst_path = os.path.join(ROOT_DIR, "OID", "Dataset", DIR, filename.replace(".txt", ".jpg"))
+                        os.replace(image_src_path, image_dst_path)
+                        os.chdir(CLASS_DIR)
                         os.chdir("Label")
                 os.chdir("..")
                 os.chdir("..")
+                shutil.rmtree(os.path.join(ROOT_DIR, "OID", "Dataset", DIR, CLASS_DIR))
         os.chdir("..")

@@ -4,35 +4,44 @@ Added conversion python script <strong>convert_annotations.py</strong> from this
 https://github.com/theAIGuysCode/YOLOv4-Cloud-Tutorial
 
 My added changes are: 
-- Add ability to delete image with annotation during reviewing
-- Add ability to move image to folder 'fix' for further correction
-  
+- Added ability to delete image with annotation during OID reviewing
+- Added ability to move image to folder 'fix' for further correction
 
-  TODO:
-- Add ability, after converting to YOLO format, to use AlexeyAB's Yolo_mark from here https://github.com/AlexeyAB/Yolo_mark
+- Also, added ability, after converting to YOLO format, to use tool to fix some annotation 
+  or even just remove some images
 
-Use toolkit normally to gather images from open images dataset:
+HOW TO USE:
+
+1. Use toolkit normally to gather images from open images dataset:
 ```bash
+python3 main.py downloader -y --classes Coin --type_csv all
 python3 main.py downloader -y --classes Coin --type_csv train
-python3 main.py downloader -y --classes Coin --type_csv test
-python3 main.py downloader -y --classes Coin --type_csv validation
 ```
+or change train to test or validation
 
-Then make review of dataset:
+2. [Optional ] Make review of dataset, remove or replace to 'fix' folder some images:
 ```
 python3 main.py visualizer --Dataset Dataset
 ```
 
-After gathering images, within the root OIDv4_ToolKit folder open the file classes.txt and edit it to have the classes you just downloaded, one per line.
+3. Within the root OIDv4_ToolKit folder open the file classes.txt and edit it to have the classes 
+   you just downloaded, one per line.
+   
 Example of classes.txt for multiclass object detector:
 ![Example of classes.txt](images/classes_example.png)
-Then just run from root directory:
+
+4. Then convert annotations to YOLO format. Just run from root directory:
 ```bash
 python3 convert_annotations.py
 ```
 
 This will generate .txt annotation files in proper format for custom object detection with YOLOv3 and YOLOv4. 
 The text files are generated in folder with images.
+
+6. Fix some annotations or delete some unnecessary images with annotations.
+```bash
+python3 fix_annotations.py
+```
 
 <h1 align="center"> ~ OIDv4 ToolKit ~ </h1>
 

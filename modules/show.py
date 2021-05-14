@@ -70,3 +70,4 @@ def show(class_name, download_dir, label_dir,total_images, index):
                        int(float(ax[-3]))), (b, g, r), 3)
 
     cv2.imshow(window_name, img)
+    return current_image_path, file_path

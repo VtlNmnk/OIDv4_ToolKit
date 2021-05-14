@@ -180,16 +180,20 @@ def bounding_boxes_images(args, DEFAULT_OID_DIR):
 			print(dedent("""
                 --------------------------------------------------------
                 INFO:
-                        - Press 'd' to select next image
-                        - Press 'a' to select previous image
-                        - Press 'e' to select a new class
-                        - Press 'w' to select a new folder
+                        - Press 'n' to select next image
+                        - Press 'p' to select previous image
+                        - Press 'd' to delete current file
+                        - Press 'd' to delete current file
+                        - Press 'f' to replace image to 'fix' folder
+                        
+                        - Press 'c' to select a new class
+                        - Press 's' to select a new folder
                         - Press 'q' to exit
                   You can resize the window if it's not optimal
                 --------------------------------------------------------
                 """))
 
-			show(class_name, download_dir, label_dir,len(os.listdir(download_dir))-1, index)
+			image_path, file_path = show(class_name, download_dir, label_dir, len(os.listdir(download_dir))-1, index)
 
 			while True:
 
@@ -197,24 +201,55 @@ def bounding_boxes_images(args, DEFAULT_OID_DIR):
 
 				k = cv2.waitKey(0) & 0xFF
 
-				if k == ord('d'):
+				if k == ord('n'):
 					cv2.destroyAllWindows()
 					if index < (len(os.listdir(download_dir)) - 2):
 						index += 1
-					show(class_name, download_dir, label_dir,len(os.listdir(download_dir))-1, index)
-				elif k == ord('a'):
+					image_path, file_path = show(class_name, download_dir, label_dir, len(os.listdir(download_dir))-1, index)
+				elif k == ord('p'):
 					cv2.destroyAllWindows()
 					if index > 0:
 						index -= 1
-					show(class_name, download_dir, label_dir,len(os.listdir(download_dir))-1, index)
-				elif k == ord('e'):
+					image_path, file_path = show(class_name, download_dir, label_dir, len(os.listdir(download_dir))-1, index)
+				elif k == ord('c'):
 					cv2.destroyAllWindows()
 					break
-				elif k == ord('w'):
+				elif k == ord('s'):
 					flag = 0
 					cv2.destroyAllWindows()
 					break
-				elif k == ord('q'):
+				elif k == ord('d'):
+					print("{} is deleted".format(os.path.join(os.getcwd(), image_path)))
+					os.remove(os.path.join(os.getcwd(), image_path))
+					print("{} is deleted".format(os.path.join(os.getcwd(), file_path)))
+					os.remove(os.path.join(os.getcwd(), file_path))
+					cv2.destroyAllWindows()
+					if index < (len(os.listdir(download_dir)) - 2):
+						index += 1
+					image_path, file_path = show(class_name, download_dir, label_dir, len(os.listdir(download_dir))-1, index)
+				elif k == ord('f'):
+					# if not os.path.isdir(os.path.join(os.getcwd(), '/OID/Dataset/')):
+					# 	os.makedirs(os.path.join(os.getcwd(), '/OID/Dataset/'))
+					source_image_path = os.path.join(os.getcwd(), image_path)
+					print("{} is moved to fix folder".format(source_image_path))
+					dest_image_path = source_image_path.replace(image_dir, 'fix')
+					if not os.path.isdir(os.path.dirname(dest_image_path)):
+						os.makedirs(os.path.dirname(dest_image_path))
+					os.replace(source_image_path, dest_image_path)
+
+
+					source_file_path = os.path.join(os.getcwd(), file_path)
+					print("{} is moved to fix folder".format(source_file_path))
+					dest_file_path = source_file_path.replace(image_dir, 'fix')
+					if not os.path.isdir(os.path.dirname(dest_file_path)):
+						os.makedirs(os.path.dirname(dest_file_path))
+					os.replace(source_file_path, dest_file_path)
+					cv2.destroyAllWindows()
+					if index < (len(os.listdir(download_dir)) - 2):
+						index += 1
+					image_path, file_path = show(class_name, download_dir, label_dir, len(os.listdir(download_dir))-1, index)
+				# If 'q' or 'escape' is pressed
+				elif k == ord('q') or k == 27:
 					cv2.destroyAllWindows()
 					exit(1)
 					break
